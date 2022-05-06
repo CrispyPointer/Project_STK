@@ -69,8 +69,9 @@ void loop() {
   }
 
   if(currentMillis - previousMillis >= period){
-    Serial.print(F("Sending packet:... "));
+    Serial.println(F("----------------------Sending Package---------------------"));
     loraTransmit();
+    Serial.println(F("----------------------Ending Package----------------------"));
     previousMillis = currentMillis;
   }
 }
