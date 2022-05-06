@@ -5,27 +5,41 @@
 
 #include <SPI.h>
 #include <LoRa.h>
+#include <TinyGPSPlus.h>
+#include <SoftwareSerial.h>
 
 //define the pins used by the transceiver module
 // SCK: GPIO 18
 // MOSI: GPIO 23
 // MISO: GPIO 19
-#define ss 5
+#define nss 5
 #define rst 14
 #define dio0 2
 
-int counter = 0;
-const char *gpsStream =
-  "$GPRMC,045103.000,A,3014.1984,N,09749.2872,W,0.67,161.46,030913,,,A*7C\r\n";
+//define pins use for UART
+#define RXD2 16
+#define TXD2 17
+#define GPSBaud 9600
+
+// The TinyGPSPlus object
+TinyGPSPlus gps;
+
+// The serial connection to the GPS device
+SoftwareSerial ss(RXD2, TXD2);
+
+unsigned long previousMillis = 0;
+const long period = 5000;
 
 void setup() {
   //initialize Serial Monitor
   Serial.begin(115200);
+  ss.begin(GPSBaud);
+  
   while (!Serial);
   Serial.println("LoRa Sender");
-
+ 
   //setup LoRa transceiver module
-  LoRa.setPins(ss, rst, dio0);
+  LoRa.setPins(nss, rst, dio0);
   
   //replace the LoRa.begin(---E-) argument with your location's frequency 
   //433E6 for Asia
@@ -43,15 +57,81 @@ void setup() {
 }
 
 void loop() {
-  Serial.print(F("Sending packet: "));
-  Serial.print(gpsStream);
+  unsigned long currentMillis = millis(); // store the current time
+  while (ss.available() > 0)
+    if (gps.encode(ss.read()))
+      transmitInfo();
 
+  if (millis() > 5000 && gps.charsProcessed() < 10)
+  {
+    Serial.println(F("No GPS detected: check wiring."));
+    while(true);
+  }
+
+  if(currentMillis - previousMillis >= period){
+    Serial.print(F("Sending packet:... "));
+    loraTransmit();
+    previousMillis = currentMillis;
+  }
+}
+
+void transmitInfo()
+{
+  Serial.print(F("Location: ")); 
+  if (gps.location.isValid())
+  {
+    Serial.print(gps.location.lat(), 6);
+    Serial.print(F(","));
+    Serial.print(gps.location.lng(), 6);
+  }
+  else
+  {
+    Serial.print(F("INVALID"));
+  }
+
+  Serial.print(F("  Date/Time: "));
+  if (gps.date.isValid())
+  {
+    Serial.print(gps.date.month());
+    Serial.print(F("/"));
+    Serial.print(gps.date.day());
+    Serial.print(F("/"));
+    Serial.print(gps.date.year());
+  }
+  else
+  {
+    Serial.print(F("INVALID"));
+  }
+
+  Serial.print(F(" "));
+  if (gps.time.isValid())
+  {
+    if (gps.time.hour() < 10) Serial.print(F("0"));
+    Serial.print(gps.time.hour());
+    Serial.print(F(":"));
+    if (gps.time.minute() < 10) Serial.print(F("0"));
+    Serial.print(gps.time.minute());
+    Serial.print(F(":"));
+    if (gps.time.second() < 10) Serial.print(F("0"));
+    Serial.print(gps.time.second());
+    Serial.print(F("."));
+    if (gps.time.centisecond() < 10) Serial.print(F("0"));
+    Serial.print(gps.time.centisecond());
+  }
+  else
+  {
+    Serial.print(F("INVALID"));
+  }
+
+  Serial.println();
+}
+
+void loraTransmit()
+{
   //Send LoRa packet to receiver
   LoRa.beginPacket();
-  LoRa.print(gpsStream);
+  LoRa.print(gps.location.lat(), 6);
+  LoRa.print(F(","));
+  LoRa.print(gps.location.lng(), 6);
   LoRa.endPacket();
-
-  counter++;
-
-  delay(5000);
 }
