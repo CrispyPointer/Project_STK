@@ -62,12 +62,14 @@ void loop() {
     if (gps.encode(ss.read()))
       transmitInfo();
 
+  //Wait after first 5 second for GPS connection
   if (millis() > 5000 && gps.charsProcessed() < 10)
   {
     Serial.println(F("No GPS detected: check wiring."));
     while(true);
   }
 
+  //Sending package every 5 second
   if(currentMillis - previousMillis >= period){
     Serial.println(F("----------------------Sending Package---------------------"));
     loraTransmit();
