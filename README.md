@@ -8,9 +8,9 @@
 
 * Note: GPS RX TX pins are connected to ESP32 TXD2 and RXD2 (pin 16 17)
 
-###### The full arduino code are included inside :open_file_folder: final_test_talker and :open_file_folder: final_test_listener
+###### The full arduino code are included inside :open_file_folder: [final_test_talker](https://github.com/phuocly2304/Project_STK/blob/main/Final_test_talker/Final_test_talker.ino) and :open_file_folder: [final_test_listener](https://github.com/phuocly2304/Project_STK/tree/main/Final_test_listener/Final_test_listener.ino)
 
-### Snipped code explain:
+### Snipped code for *Talker* explain:
 > **Prerequisite library**
 ```arduino
 #include <SPI.h>
@@ -73,6 +73,23 @@ void loop() {
     loraTransmit();
     Serial.println(F("----------------------Ending Package----------------------"));
     previousMillis = currentMillis;
+  }
+}
+```
+### Snipped code for *Listener* explain:
+
+```arduino
+void loop() {
+  // try to parse packet
+  int packetSize = LoRa.parsePacket();
+  if (packetSize) {
+    // received a packet
+    Serial.print(F("Received: "));
+    // read packet
+    while (LoRa.available()) {
+      LoRaData = LoRa.readString();
+      Serial.println(LoRaData);
+    }
   }
 }
 ```
