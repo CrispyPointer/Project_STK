@@ -12,7 +12,7 @@
 
 ### Snipped code for *Talker* explain:
 > **Prerequisite library**
-```arduino
+```C++
 #include <SPI.h>
 #include <LoRa.h>
 #include <TinyGPSPlus.h>
@@ -21,7 +21,7 @@
 
 > Set up for both **Lora** module and **GPS**
 > ###### Note: Put GPS module outside for proper signal receiving 
-```arduino
+```C++
 void setup() {
   //initialize Serial Monitor
   Serial.begin(115200);
@@ -53,7 +53,7 @@ void setup() {
 > * GPS signal will be constantly receive through UART
 > * Every 5 seconds, ESP will transmit the location to the other through **Lora**.
 
-```Arduino
+```C++
 void loop() {
   unsigned long currentMillis = millis(); // store the current time
   while (ss.available() > 0)
@@ -78,7 +78,7 @@ void loop() {
 ```
 ### Snipped code for *Listener* explain:
 
-```arduino
+```C++
 void loop() {
   // try to parse packet
   int packetSize = LoRa.parsePacket();
