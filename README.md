@@ -104,7 +104,7 @@ void loop() {
 ### Second result:
 ###### The code has been updated so that it could be connected to the TFT and OLED display
 
-> **Prerequisite library**
+ ***Prerequisite library***
 > *For OLED display:*
 ```C++
 #include <Adafruit_GFX.h>
@@ -132,4 +132,18 @@ void loop() {
 #define TFT_DC    2  // Data Command control pin
 #define TFT_RST   4  // Reset pin (could connect to RST pin)
 ```
+#### Distance and display testing
+###### This is the test to find out how far can the lora modules communicate with each other. The module is believed to reliably transmit and receive data more than 200 meters with basic setting. The test was placed at a park with trees and bushes as obstacles between two devices.
+
+* First result shown that it could communicate stably at approximately 250 meters.
+
+![Transmit device](https://github.com/phuocly2304/Project_STK/blob/main/figure/transmit_lora.jpg)
+
+![Receive device](https://github.com/phuocly2304/Project_STK/blob/main/figure/received_lora.jpeg)
+
+* After 250 meter, signal got interference and requires a few reset to received data. *(Probably because of the trees and bushes between)*
+  
+![Max distance where signal was stable](https://github.com/phuocly2304/Project_STK/blob/main/figure/Test_distance_01.jpg)
+
+* After 300 meter, the signal got lost completely
 
