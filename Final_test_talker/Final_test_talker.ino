@@ -15,7 +15,7 @@
 
 Adafruit_SH1106 display(21, 22);
 //define the pins used by the transceiver module
-// SCK: GPIO 18
+// SCK:  GPIO 18
 // MOSI: GPIO 23
 // MISO: GPIO 19
 #define nss 5

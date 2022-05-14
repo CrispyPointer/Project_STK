@@ -100,3 +100,36 @@ void loop() {
 ### Remaining tasks:
 * Display data on TFT screen
 * Test for connecting distance (A little tricky!!) 
+
+### Second result:
+###### The code has been updated so that it could be connected to the TFT and OLED display
+
+> **Prerequisite library**
+> *For OLED display:*
+```C++
+#include <Adafruit_GFX.h>
+#include <Adafruit_SH1106.h>
+```
+
+> For TFT Display:
+```C++
+#include <TFT_eSPI.h> // Graphics and font library for ST7735 driver chip
+```
+* Note: Screen driver and pins must be set up in User_Setup.h
+```C++
+// Find these setups inside the .h file and uncomment them
+#define ST7735_DRIVER
+
+#define TFT_WIDTH  128
+#define TFT_HEIGHT 160
+
+#define ST7735_REDTAB
+
+#define TFT_MISO 19
+#define TFT_MOSI 23
+#define TFT_SCLK 18
+#define TFT_CS    5  // Chip select control pin
+#define TFT_DC    2  // Data Command control pin
+#define TFT_RST   4  // Reset pin (could connect to RST pin)
+```
+
