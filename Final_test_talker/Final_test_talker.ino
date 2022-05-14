@@ -7,7 +7,13 @@
 #include <LoRa.h>
 #include <TinyGPSPlus.h>
 #include <SoftwareSerial.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SH1106.h>
+#define OLED_SDA 21
+#define OLED_SCL 22
 
+Adafruit_SH1106 display(21, 22);
 //define the pins used by the transceiver module
 // SCK: GPIO 18
 // MOSI: GPIO 23
@@ -29,6 +35,7 @@ SoftwareSerial ss(RXD2, TXD2);
 
 unsigned long previousMillis = 0;
 const long period = 5000;
+int counter = 0;
 
 void setup() {
   //initialize Serial Monitor
@@ -54,6 +61,7 @@ void setup() {
   // ranges from 0-0xFF
   LoRa.setSyncWord(0xF3);
   Serial.println("LoRa Initializing OK!");
+  oled_setup();
 }
 
 void loop() {
@@ -71,11 +79,14 @@ void loop() {
 
   //Sending package every 5 second
   if(currentMillis - previousMillis >= period){
+    counter++;
     Serial.println(F("----------------------Sending Package---------------------"));
     loraTransmit();
     Serial.println(F("----------------------Ending Package----------------------"));
     previousMillis = currentMillis;
   }
+
+  oled_display();
 }
 
 void transmitInfo()
@@ -134,7 +145,37 @@ void loraTransmit()
   //Send LoRa packet to receiver
   LoRa.beginPacket();
   LoRa.print(gps.location.lat(), 6);
-  LoRa.print(F(","));
+  LoRa.print(F("-"));
   LoRa.print(gps.location.lng(), 6);
+  LoRa.print(F("-"));
+  LoRa.print(counter);
   LoRa.endPacket();
+}
+
+void oled_setup()
+{
+  display.begin(SH1106_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
+  display.display(); 
+}
+
+void oled_display()
+{
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.println("GPS - Reveiving: ");
+  display.println(" ");
+  
+  display.print(gps.location.lat(), 6);
+  display.print("-");
+  display.println(gps.location.lng(), 6);
+
+  display.println();
+  display.println("Package transmit: ");
+  display.print("#");
+  display.println(counter);
+
+  display.display();
 }
