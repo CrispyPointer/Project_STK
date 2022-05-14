@@ -165,7 +165,7 @@ void oled_display()
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
-  display.println("GPS - Reveiving: ");
+  display.println("GPS - Receiving: ");
   display.println(" ");
   
   display.print(gps.location.lat(), 6);
