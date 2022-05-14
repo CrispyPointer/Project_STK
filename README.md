@@ -135,7 +135,7 @@ void loop() {
 #### Distance and display testing
 ###### This is the test to find out how far can the lora modules communicate with each other. The module is believed to reliably transmit and receive data more than 200 meters with basic setting. The test was placed at a park with trees and bushes as obstacles between two devices.
 
-* First result shown that it could communicate stably at approximately 250 meters.
+* First result has shown that it could communicate stably at approximately 250 meters.
 
 ![Transmit device](https://github.com/phuocly2304/Project_STK/blob/main/figure/transmit_lora.jpg)
 
