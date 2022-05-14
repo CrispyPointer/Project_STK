@@ -143,7 +143,7 @@ void loop() {
 
 * After 250 meter, signal got interference and requires a few reset to received data. *(Probably because of the trees and bushes between)*
   
-![Max distance where signal was stable](https://github.com/phuocly2304/Project_STK/blob/main/figure/Test_distance_01.jpg)
+![Max distance where signal was stable](https://github.com/phuocly2304/Project_STK/blob/main/figure/distance_lora.jpg)
 
 * After 300 meter, the signal got lost completely
 
